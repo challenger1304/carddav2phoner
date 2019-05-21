@@ -60,6 +60,15 @@ public class Settings {
 		Settings.setSetting("SETTINGS", "expPath", dlPath);
 	}
 
+	public static String getImportPath() {
+		String fallback = Paths.get(System.getProperty("user.home"), "Downloads", "contacts.vcf").toString();
+		return getSetting("SETTINGS", "impPath", fallback);
+	}
+
+	public static void setImportPath(String dlPath) {
+		Settings.setSetting("SETTINGS", "impPath", dlPath);
+	}
+
 	public static String getAnonymousName() {
 		String fallback = "Anonymous";
 		return getSetting("SETTINGS", "anonymousName", fallback);
