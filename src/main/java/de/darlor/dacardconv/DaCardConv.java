@@ -2,6 +2,7 @@ package de.darlor.dacardconv;
 
 import de.darlor.dacardconv.panes.SettingsPane;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -16,6 +17,7 @@ public class DaCardConv extends Application {
 	public void start(Stage primaryStage) {
 
 		BorderPane basicPane = new BorderPane();
+		basicPane.setPadding(new Insets(8));
 		basicPane.setBottom(new SettingsPane().getPane());
 
 		Scene scene = new Scene(basicPane, 300, 250);
