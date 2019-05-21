@@ -14,6 +14,7 @@ public class Settings {
 
 	private static final Path SETTINGSFOLDER = Paths.get(System.getProperty("user.home"), ".config", "darlor");
 	private static final File SETTINGSFILE = Paths.get(SETTINGSFOLDER.toString(), "daCardConv.conf").toFile();
+	private static String webdavPassword;
 
 	private static String getSetting(String section, String key, String returnOnFailure) {
 		try {
@@ -66,5 +67,35 @@ public class Settings {
 
 	public static void setAnonymousName(String name) {
 		Settings.setSetting("SETTINGS", "anonymousName", name);
+	}
+
+	public static String getWebdavAddress() {
+		String fallback = "https://";
+		return getSetting("SETTINGS", "webdavUrl", fallback);
+	}
+
+	public static void setWebdavAddress(String url) {
+		Settings.setSetting("SETTINGS", "webdavUrl", url);
+	}
+
+	public static String getWebdavUsername() {
+		String fallback = "Anonymous";
+		return getSetting("SETTINGS", "webdavUser", fallback);
+	}
+
+	public static void setWebdavUsername(String name) {
+		Settings.setSetting("SETTINGS", "webdavUser", name);
+	}
+
+	public static String getwebdavPassword() {
+		if (webdavPassword == null) {
+			return "";
+		} else {
+			return webdavPassword;
+		}
+	}
+
+	public static void setWebdavPassword(String password) {
+		webdavPassword = password; //Do NOT store in a file!
 	}
 }
