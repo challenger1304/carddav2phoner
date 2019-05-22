@@ -28,7 +28,7 @@ public class DaCardConv extends Application {
 		basicPane.setBottom(new SettingsPane(this).getPane());
 		basicPane.setCenter(vcardsPane.getPane());
 
-		Scene scene = new Scene(basicPane, 300, 250);
+		Scene scene = new Scene(basicPane, 700, 500);
 
 		primaryStage.setTitle("CardDAV 2 Phoner");
 		primaryStage.setScene(scene);
