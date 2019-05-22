@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 
 /**
  *
@@ -19,12 +20,16 @@ public class VCardsPane {
 	public VCardsPane() {
 		dataTableList = FXCollections.observableArrayList();
 		dataTable = new TableView<>(dataTableList);
+		dataTable.setEditable(true);
 		TableColumn<PhonerDataSet, String> nameCol = new TableColumn<>("Display Name");
 		nameCol.setCellValueFactory(new PropertyValueFactory("name"));
+		nameCol.setCellFactory(TextFieldTableCell.forTableColumn());
 		TableColumn<PhonerDataSet, String> telNoCol = new TableColumn<>("Telephone Number");
 		telNoCol.setCellValueFactory(new PropertyValueFactory("telNo"));
+		telNoCol.setCellFactory(TextFieldTableCell.forTableColumn());
 		TableColumn<PhonerDataSet, String> descCol = new TableColumn<>("Description");
 		descCol.setCellValueFactory(new PropertyValueFactory("desc"));
+		descCol.setCellFactory(TextFieldTableCell.forTableColumn());
 
 		dataTable.getColumns().setAll(nameCol, telNoCol, descCol);
 	}
