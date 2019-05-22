@@ -30,7 +30,7 @@ public class VCardExporterTask extends Task<Void> {
 
 		try (PrintWriter writer = new PrintWriter(file, StandardCharsets.ISO_8859_1)) { //Charset needed by phoner
 			dataSets.forEach((t) -> {
-				writer.println(String.format("%s, %s, %s", t.getName(), t.getTelNo(), t.getDesc()));
+				writer.println(String.format(Settings.getExportPattern(), t.getName(), t.getTelNo(), t.getDesc()));
 			});
 		} catch (FileNotFoundException ex) {
 			ex.printStackTrace();

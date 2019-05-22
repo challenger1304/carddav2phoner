@@ -50,6 +50,19 @@ public class Settings {
 			ex.printStackTrace();
 		}
 	}
+	
+	
+	public static String getMode() {
+		return getSetting("SETTINGS", "expMode", "phoner");
+	}
+	
+	public static void setModePhoner() {
+		setSetting("SETTINGS", "expMode", "phoner");
+	}
+	
+	public static void setModePhonerLite() {
+		setSetting("SETTINGS", "expMode", "phonerlite");
+	}
 
 	public static String getExportPath() {
 		String fallback = Paths.get(System.getProperty("user.home"), "Downloads", "contacts.txt").toString();
@@ -58,6 +71,16 @@ public class Settings {
 
 	public static void setExportPath(String dlPath) {
 		Settings.setSetting("SETTINGS", "expPath", dlPath);
+	}
+	
+	public static String getExportPattern() {
+		switch (getMode()) {
+			case "phonerlite":
+				return "%s;%s;;%s"; //compatible with PhonerLite's address book
+			case "phoner":
+			default:
+				return "%s,%s,%s"; //compatible with Phoner's address book
+		}
 	}
 
 	public static String getImportPath() {
