@@ -2,6 +2,7 @@ package de.darlor.dacardconv.panes;
 
 import de.darlor.dacardconv.DaCardConv;
 import de.darlor.dacardconv.Settings;
+import de.darlor.dacardconv.tasks.VCardExporterTask;
 import de.darlor.dacardconv.tasks.VCardImporterTask;
 import java.io.File;
 import javafx.event.ActionEvent;
@@ -11,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.stage.FileChooser;
 
 /**
  *
@@ -27,9 +29,21 @@ public class SettingsPane {
 		tfImportPath.textProperty().addListener((obs, oldText, newPath) -> {
 			Settings.setImportPath(newPath);
 		});
+		Button btImportPath = new Button("Select");
+		btImportPath.setPrefWidth(buttonSize);
+		btImportPath.setOnAction((event) -> {
+			FileChooser fc = new FileChooser();
+			File file = new File(Settings.getExportPath());
+			if (file.getParentFile().isDirectory()) { //check if directory exists
+				fc.setInitialDirectory(file.getParentFile());
+				fc.setInitialFileName(file.getName());
+			}
+			File f = fc.showOpenDialog(btImportPath.getScene().getWindow());
+			if (f != null) {tfImportPath.setText(f.toString());}
+		});
 
 		Button btImport = new Button("Import");
-		btImport.setMaxWidth(buttonSize);
+		btImport.setPrefWidth(buttonSize);
 		btImport.setOnAction((ActionEvent event) -> {
 			VCardImporterTask importerTask;
 			importerTask = new VCardImporterTask(new File(tfImportPath.getText()), app.getVcardsPane().getDataTableList());
@@ -41,11 +55,26 @@ public class SettingsPane {
 		tfExportPath.textProperty().addListener((obs, oldText, newPath) -> {
 			Settings.setExportPath(newPath);
 		});
+		Button btExportPath = new Button("Select");
+		btExportPath.setPrefWidth(buttonSize);
+		btExportPath.setOnAction((event) -> {
+			FileChooser fc = new FileChooser();
+			File file = new File(Settings.getExportPath());
+			if (file.getParentFile().isDirectory()) { //check if directory exists
+				fc.setInitialDirectory(file.getParentFile());
+				fc.setInitialFileName(file.getName());
+			}
+			File f = fc.showSaveDialog(btExportPath.getScene().getWindow());
+			if (f != null) {tfExportPath.setText(f.toString());}
+		});
 
 		Button btExport = new Button("Export");
-		btExport.setMaxWidth(buttonSize);
+		btExport.setPrefWidth(buttonSize);
 		btExport.setOnAction((event) -> {
-			//TODO generate txt
+			VCardExporterTask exporterTask;
+			exporterTask = new VCardExporterTask(app.getVcardsPane().getDataTableList());
+			Thread th = new Thread(exporterTask);
+			th.start();
 		});
 
 		ColumnConstraints cc = new ColumnConstraints();
@@ -56,9 +85,9 @@ public class SettingsPane {
 		settingsPane.setVgap(4);
 		settingsPane.setHgap(4);
 		settingsPane.setAlignment(Pos.BASELINE_RIGHT);
-		settingsPane.getColumnConstraints().addAll(cc, new ColumnConstraints(buttonSize));
-		settingsPane.addRow(0, tfImportPath, btImport);
-		settingsPane.addRow(1, tfExportPath, btExport);
+		settingsPane.getColumnConstraints().addAll(cc, new ColumnConstraints(buttonSize), new ColumnConstraints(buttonSize));
+		settingsPane.addRow(0, tfImportPath, btImportPath, btImport);
+		settingsPane.addRow(1, tfExportPath, btExportPath, btExport);
 	}
 
 	public GridPane getPane() {
