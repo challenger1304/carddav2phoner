@@ -38,7 +38,6 @@ public class VCardImporterTask extends Task<ObservableList<PhonerDataSet>> {
 			vcardsList = vcardEngine.parseMultiple(this.vcardFile);
 			DaCardConv.LOGGER.info("parsing vcards");
 			vcardsList.forEach((VCard t) -> {
-				DaCardConv.LOGGER.info("parsing new vcard");
 				String name;
 				String telephone;
 				String description;
