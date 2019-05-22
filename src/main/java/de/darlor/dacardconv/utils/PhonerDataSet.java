@@ -8,9 +8,9 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class PhonerDataSet {
 
-	private SimpleStringProperty name;
-	private SimpleStringProperty telNo;
-	private SimpleStringProperty desc;
+	private final SimpleStringProperty name = new SimpleStringProperty();
+	private final SimpleStringProperty telNo = new SimpleStringProperty();
+	private final SimpleStringProperty desc = new SimpleStringProperty();
 
 	public PhonerDataSet(String name, String telNo, String desc) {
 		this.name.set(name);
