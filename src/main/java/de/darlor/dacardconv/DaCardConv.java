@@ -2,6 +2,7 @@ package de.darlor.dacardconv;
 
 import de.darlor.dacardconv.panes.SettingsPane;
 import de.darlor.dacardconv.panes.VCardsPane;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -13,6 +14,8 @@ import javafx.stage.Stage;
  * @author Vincent Neubauer (v.neubauer@darlor.de)
  */
 public class DaCardConv extends Application {
+
+	public static final Logger LOGGER = Logger.getAnonymousLogger();
 
 	@Override
 	public void start(Stage primaryStage) {
