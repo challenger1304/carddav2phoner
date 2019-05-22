@@ -51,16 +51,17 @@ public class VCardImporterTask extends Task<Void> {
 				} else {
 					name = Settings.getAnonymousName();
 				}
+				String displayname = name.replace(",", "").replace(";", "");
 				//get a description (generated from groups)
 				String desc = t.getCategories() != null ? t.getCategories().getCategories().toString() : "";
-				String description = desc.trim();
+				String description = desc.trim().replace(",", "").replace(";", "");
 				//get the telephone number
 				if (t.getTels() != null) {
 					t.getTels().forEach((u) -> {
 						String telephone = u.getTelephone();
 						if (telephone != null) {
-							telephone = telephone.trim().replace(" ", "").replaceFirst("^0", "+49");
-							this.dataSetsLocal.add(new PhonerDataSet(name, telephone, description));
+							telephone = telephone.trim().replace(" ", "").replaceFirst("^0", "+49").replace(",", "").replace(";", "");
+							this.dataSetsLocal.add(new PhonerDataSet(displayname, telephone, description));
 						}
 					});
 				}
