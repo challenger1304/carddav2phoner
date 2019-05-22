@@ -1,6 +1,7 @@
 package de.darlor.dacardconv.panes;
 
 import de.darlor.dacardconv.utils.PhonerDataSet;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -12,10 +13,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
  */
 public class VCardsPane {
 
-	private static TableView<PhonerDataSet> dataTable;
+	private final TableView<PhonerDataSet> dataTable;
+	private final ObservableList<PhonerDataSet> dataTableList;
 
 	public VCardsPane() {
-		dataTable = new TableView<>();
+		dataTableList = FXCollections.observableArrayList();
+		dataTable = new TableView<>(dataTableList);
 		TableColumn<PhonerDataSet, String> nameCol = new TableColumn<>("Display Name");
 		nameCol.setCellValueFactory(new PropertyValueFactory("name"));
 		TableColumn<PhonerDataSet, String> telNoCol = new TableColumn<>("Telephone Number");
@@ -30,8 +33,8 @@ public class VCardsPane {
 		return dataTable;
 	}
 
-	public static void setTableItems(ObservableList<PhonerDataSet> list) {
-		dataTable.setItems(list);
+	public ObservableList<PhonerDataSet> getDataTableList() {
+		return dataTableList;
 	}
 
 }

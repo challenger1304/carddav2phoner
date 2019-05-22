@@ -17,19 +17,26 @@ public class DaCardConv extends Application {
 
 	public static final Logger LOGGER = Logger.getAnonymousLogger();
 
+	private VCardsPane vcardsPane;
+
 	@Override
 	public void start(Stage primaryStage) {
+		vcardsPane = new VCardsPane();
 
 		BorderPane basicPane = new BorderPane();
 		basicPane.setPadding(new Insets(8));
-		basicPane.setBottom(new SettingsPane().getPane());
-		basicPane.setCenter(new VCardsPane().getPane());
+		basicPane.setBottom(new SettingsPane(this).getPane());
+		basicPane.setCenter(vcardsPane.getPane());
 
 		Scene scene = new Scene(basicPane, 300, 250);
 
 		primaryStage.setTitle("CardDAV 2 Phoner");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+	}
+
+	public VCardsPane getVcardsPane() {
+		return vcardsPane;
 	}
 
 	/**

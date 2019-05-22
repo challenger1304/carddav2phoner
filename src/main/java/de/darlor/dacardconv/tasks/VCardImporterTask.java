@@ -2,12 +2,11 @@ package de.darlor.dacardconv.tasks;
 
 import de.darlor.dacardconv.DaCardConv;
 import de.darlor.dacardconv.Settings;
-import de.darlor.dacardconv.panes.VCardsPane;
 import de.darlor.dacardconv.utils.PhonerDataSet;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import net.sourceforge.cardme.engine.VCardEngine;
@@ -18,20 +17,22 @@ import net.sourceforge.cardme.vcard.exceptions.VCardParseException;
  *
  * @author Vincent Neubauer (v.neubauer@asysgmbh.de)
  */
-public class VCardImporterTask extends Task<ObservableList<PhonerDataSet>> {
+public class VCardImporterTask extends Task<Void> {
 
 	private List<VCard> vcardsList;
 	private final File vcardFile;
-	private ObservableList<PhonerDataSet> dataSets = null;
+	private final ObservableList<PhonerDataSet> dataSets;
+	private final ArrayList<PhonerDataSet> dataSetsLocal;
 
-	public VCardImporterTask(File vcards) {
+	public VCardImporterTask(File vcards, ObservableList<PhonerDataSet> list) {
 		//TODO get vcards directly from CardDAV-Server
 		this.vcardFile = vcards;
-		this.dataSets = FXCollections.observableArrayList();
+		this.dataSets = list;
+		this.dataSetsLocal = new ArrayList();
 	}
 
 	@Override
-	protected ObservableList<PhonerDataSet> call() throws Exception {
+	protected Void call() throws Exception {
 		DaCardConv.LOGGER.info("started importing vcards");
 		try {
 			VCardEngine vcardEngine = new VCardEngine();
@@ -56,19 +57,19 @@ public class VCardImporterTask extends Task<ObservableList<PhonerDataSet>> {
 				telephone = t.getTels() != null ? t.getTels().get(0).getTelephone(): "";
 				//TODO maybe foreach telephoneNo. a separate PhonerDataSet?
 
-				this.dataSets.add(new PhonerDataSet(name, telephone, description));
+				this.dataSetsLocal.add(new PhonerDataSet(name, telephone, description));
 			});
 			DaCardConv.LOGGER.info("finished importing vcards");
 		} catch (IOException | VCardParseException ex) {
 			DaCardConv.LOGGER.severe("failed importing vcards");
 			ex.printStackTrace();
 		}
-		return this.dataSets;
+		return null;
 	}
 
 	@Override
 	protected void succeeded() {
-		VCardsPane.setTableItems(this.dataSets);
+		this.dataSets.addAll(dataSetsLocal);
 	}
 
 }

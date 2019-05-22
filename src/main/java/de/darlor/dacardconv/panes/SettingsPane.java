@@ -1,5 +1,6 @@
 package de.darlor.dacardconv.panes;
 
+import de.darlor.dacardconv.DaCardConv;
 import de.darlor.dacardconv.Settings;
 import de.darlor.dacardconv.tasks.VCardImporterTask;
 import java.io.File;
@@ -20,7 +21,7 @@ public class SettingsPane {
 	private static GridPane settingsPane;
 	private final Integer buttonSize = 64;
 
-	public SettingsPane() {
+	public SettingsPane(DaCardConv app) {
 
 		TextField tfImportPath = new TextField(Settings.getImportPath());
 		tfImportPath.textProperty().addListener((obs, oldText, newPath) -> {
@@ -31,7 +32,7 @@ public class SettingsPane {
 		btImport.setMaxWidth(buttonSize);
 		btImport.setOnAction((ActionEvent event) -> {
 			VCardImporterTask importerTask;
-			importerTask = new VCardImporterTask(new File(tfImportPath.getText()));
+			importerTask = new VCardImporterTask(new File(tfImportPath.getText()), app.getVcardsPane().getDataTableList());
 			Thread th = new Thread(importerTask);
 			th.start();
 		});
