@@ -20,6 +20,7 @@ public class VCardsPane {
 	public VCardsPane() {
 		dataTableList = FXCollections.observableArrayList();
 		dataTable = new TableView<>(dataTableList);
+		dataTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		dataTable.setEditable(true);
 		TableColumn<PhonerDataSet, String> nameCol = new TableColumn<>("Display Name");
 		nameCol.setCellValueFactory(new PropertyValueFactory("name"));
