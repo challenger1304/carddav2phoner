@@ -3,6 +3,7 @@ package de.darlor.dacardconv.tasks;
 import de.darlor.dacardconv.DaCardConv;
 import de.darlor.dacardconv.Settings;
 import de.darlor.dacardconv.utils.PhonerDataSet;
+import de.darlor.dacardconv.utils.PhonerUnknownCallerDataSet;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class VCardImporterTask extends Task<Void> {
 	protected Void call() throws Exception {
 		DaCardConv.LOGGER.info("started importing vcards");
 		try {
+			this.dataSetsLocal.add(new PhonerUnknownCallerDataSet());
 			VCardEngine vcardEngine = new VCardEngine();
 			vcardsList = vcardEngine.parseMultiple(this.vcardFile);
 			DaCardConv.LOGGER.info("parsing vcards");
