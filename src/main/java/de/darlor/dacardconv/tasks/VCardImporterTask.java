@@ -39,11 +39,9 @@ public class VCardImporterTask extends Task<Void> {
 			vcardsList = vcardEngine.parseMultiple(this.vcardFile);
 			DaCardConv.LOGGER.info("parsing vcards");
 			vcardsList.forEach((VCard t) -> {
-				String name;
-				String telephone;
-				String description;
 
 				//get a displayable name
+				String name;
 				if (t.getOrg() != null) {
 					name = t.getOrg().getOrgName();
 				} else if (t.getFN() != null) {
@@ -52,12 +50,19 @@ public class VCardImporterTask extends Task<Void> {
 					name = Settings.getAnonymousName();
 				}
 				//get a description (generated from groups)
-				description = t.getCategories() != null ? t.getCategories().getCategories().toString(): "";
+				String desc = t.getCategories() != null ? t.getCategories().getCategories().toString() : "";
+				String description = desc.trim();
 				//get the telephone number
-				telephone = t.getTels() != null ? t.getTels().get(0).getTelephone(): "";
-				//TODO maybe foreach telephoneNo. a separate PhonerDataSet?
+				if (t.getTels() != null) {
+					t.getTels().forEach((u) -> {
+						String telephone = u.getTelephone();
+						if (telephone != null) {
+							telephone = telephone.trim().replace(" ", "").replaceFirst("^0", "+49");
+							this.dataSetsLocal.add(new PhonerDataSet(name, telephone, description));
+						}
+					});
+				}
 
-				this.dataSetsLocal.add(new PhonerDataSet(name, telephone, description));
 			});
 			DaCardConv.LOGGER.info("finished importing vcards");
 		} catch (IOException | VCardParseException ex) {
