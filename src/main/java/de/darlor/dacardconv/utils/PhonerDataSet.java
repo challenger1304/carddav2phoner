@@ -1,6 +1,7 @@
 package de.darlor.dacardconv.utils;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  *
@@ -8,9 +9,9 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class PhonerDataSet {
 
-	private final SimpleStringProperty name = new SimpleStringProperty();
-	private final SimpleStringProperty telNo = new SimpleStringProperty();
-	private final SimpleStringProperty desc = new SimpleStringProperty();
+	private final StringProperty name = new SimpleStringProperty();
+	private final StringProperty telNo = new SimpleStringProperty();
+	private final StringProperty desc = new SimpleStringProperty();
 
 	public PhonerDataSet(String name, String telNo, String desc) {
 		this.name.set(name);
@@ -26,7 +27,7 @@ public class PhonerDataSet {
 		this.name.set(name);
 	}
 
-	public SimpleStringProperty nameProperty() {
+	public StringProperty nameProperty() {
 		return this.name;
 	}
 
@@ -38,7 +39,7 @@ public class PhonerDataSet {
 		this.telNo.set(telNo);
 	}
 
-	public SimpleStringProperty telNoProperty() {
+	public StringProperty telNoProperty() {
 		return this.telNo;
 	}
 
@@ -50,7 +51,7 @@ public class PhonerDataSet {
 		this.desc.set(desc);
 	}
 
-	public SimpleStringProperty descProperty() {
+	public StringProperty descProperty() {
 		return this.desc;
 	}
 
