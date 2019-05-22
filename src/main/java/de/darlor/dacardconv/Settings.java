@@ -52,7 +52,8 @@ public class Settings {
 	}
 
 	public static String getExportPath() {
-		return getSetting("SETTINGS", "expPath", "");
+		String fallback = Paths.get(System.getProperty("user.home"), "Downloads", "contacts.txt").toString();
+		return getSetting("SETTINGS", "expPath", fallback);
 	}
 
 	public static void setExportPath(String dlPath) {
@@ -60,7 +61,8 @@ public class Settings {
 	}
 
 	public static String getImportPath() {
-		return getSetting("SETTINGS", "impPath", "");
+		String fallback = Paths.get(System.getProperty("user.home"), "Downloads", "contacts.vcf").toString();
+		return getSetting("SETTINGS", "impPath", fallback);
 	}
 
 	public static void setImportPath(String dlPath) {
