@@ -68,8 +68,7 @@ public class Settings {
 	}
 
 	public static String getAnonymousName() {
-		String fallback = "Anonymous";
-		return getSetting("SETTINGS", "anonymousName", fallback);
+		return getSetting("SETTINGS", "anonymousName", "Unknown");
 	}
 
 	public static void setAnonymousName(String name) {
