@@ -1,6 +1,9 @@
 package de.darlor.dacardconv.panes;
 
 import de.darlor.dacardconv.Settings;
+import de.darlor.dacardconv.tasks.VCardImporterTask;
+import java.io.File;
+import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -16,6 +19,7 @@ public class SettingsPane {
 
 	private static GridPane settingsPane;
 	private final Integer buttonSize = 64;
+
 	public SettingsPane() {
 
 		TextField tfImportPath = new TextField(Settings.getImportPath());
@@ -25,8 +29,11 @@ public class SettingsPane {
 
 		Button btImport = new Button("Import");
 		btImport.setMaxWidth(buttonSize);
-		btImport.setOnAction((event) -> {
-			//TODO import vcards
+		btImport.setOnAction((ActionEvent event) -> {
+			VCardImporterTask importerTask;
+			importerTask = new VCardImporterTask(new File(tfImportPath.getText()));
+			Thread th = new Thread(importerTask);
+			th.start();
 		});
 
 		TextField tfExportPath = new TextField(Settings.getExportPath());

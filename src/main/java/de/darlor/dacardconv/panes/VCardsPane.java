@@ -30,7 +30,7 @@ public class VCardsPane {
 		return dataTable;
 	}
 
-	public void setTableItems(ObservableList<PhonerDataSet> list) {
+	public static void setTableItems(ObservableList<PhonerDataSet> list) {
 		dataTable.setItems(list);
 	}
 
