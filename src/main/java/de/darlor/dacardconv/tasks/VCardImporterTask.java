@@ -76,6 +76,7 @@ public class VCardImporterTask extends Task<Void> {
 
 	@Override
 	protected void succeeded() {
+		this.dataSets.clear();
 		this.dataSets.addAll(dataSetsLocal);
 	}
 
