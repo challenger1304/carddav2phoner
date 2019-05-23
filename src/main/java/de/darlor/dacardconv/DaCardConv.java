@@ -35,7 +35,7 @@ public class DaCardConv extends Application {
 
 		Scene scene = new Scene(basicPane, 700, 500);
 
-		primaryStage.setTitle("CardDAV 2 Phoner");
+		primaryStage.setTitle(Settings.getAppName());
 		primaryStage.setScene(scene);
 		primaryStage.getIcons().add(new Image("de/darlor/dacardconv/assets/logo.png"));
 		primaryStage.show();

@@ -10,6 +10,8 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
 /**
  *
@@ -18,13 +20,20 @@ import javafx.scene.control.Dialog;
 public class VCardExporterTask extends Task<Void> {
 
 	private ObservableList<PhonerDataSet> dataSets = null;
+	private final Dialog DIALOG;
 
 	public VCardExporterTask(ObservableList<PhonerDataSet> vcards) {
+		this.DIALOG = new Dialog();
 		this.dataSets = vcards;
 	}
 
 	@Override
 	protected Void call() throws Exception {
+		DIALOG.getDialogPane().getButtonTypes().add(ButtonType.OK);
+		DIALOG.setTitle(Settings.getAppName() + " - Exporter");
+		Stage stage = (Stage) DIALOG.getDialogPane().getScene().getWindow();
+		stage.getIcons().add(new Image("de/darlor/dacardconv/assets/logo.png"));
+
 		File file = new File(Settings.getExportPath());
 		file.getParentFile().mkdirs();
 
@@ -41,20 +50,15 @@ public class VCardExporterTask extends Task<Void> {
 
 	@Override
 	protected void succeeded() {
-		Dialog dial = new Dialog();
-		dial.setContentText("Export was successful");
-		dial.getDialogPane().getButtonTypes().add(ButtonType.OK);
-		dial.show();
+		DIALOG.setContentText("Export was successful");
+		DIALOG.show();
 	}
 
 	@Override
 	protected void failed() {
 		this.getException().printStackTrace();
-		Dialog dial = new Dialog();
-		dial.setContentText("Export failed!");
-		dial.setTitle("Error");
-		dial.getDialogPane().getButtonTypes().add(ButtonType.OK);
-		dial.show();
+		DIALOG.setContentText("Export failed!");
+		DIALOG.show();
 	}
 
 }

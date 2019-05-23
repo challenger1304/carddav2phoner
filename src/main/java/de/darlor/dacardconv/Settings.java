@@ -51,6 +51,10 @@ public class Settings {
 		}
 	}
 
+	public static String getAppName() {
+		return "CardDAV 2 Phoner";
+	}
+
 	public static String getMode() {
 		return getSetting("SETTINGS", "expMode", "phoner");
 	}
