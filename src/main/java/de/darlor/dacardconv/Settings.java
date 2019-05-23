@@ -50,29 +50,37 @@ public class Settings {
 			ex.printStackTrace();
 		}
 	}
-	
-	
+
 	public static String getMode() {
 		return getSetting("SETTINGS", "expMode", "phoner");
 	}
-	
+
 	public static void setModePhoner() {
 		setSetting("SETTINGS", "expMode", "phoner");
 	}
-	
+
 	public static void setModePhonerLite() {
 		setSetting("SETTINGS", "expMode", "phonerlite");
 	}
 
+	public static String getExportPathDefault() {
+		switch (getMode()) {
+			case "phonerlite":
+				return Paths.get(System.getProperty("user.home"), "AppData", "Roaming", "PhonerLite", "phonebook.csv").toString();
+			case "phoner":
+			default:
+				return Paths.get(System.getProperty("user.home"), "Downloads", "contacts.txt").toString();
+		}
+	}
+
 	public static String getExportPath() {
-		String fallback = Paths.get(System.getProperty("user.home"), "Downloads", "contacts.txt").toString();
-		return getSetting("SETTINGS", "expPath", fallback);
+		return getSetting("SETTINGS", "expPath", getExportPathDefault());
 	}
 
 	public static void setExportPath(String dlPath) {
 		Settings.setSetting("SETTINGS", "expPath", dlPath);
 	}
-	
+
 	public static String getExportPattern() {
 		switch (getMode()) {
 			case "phonerlite":
@@ -83,17 +91,12 @@ public class Settings {
 		}
 	}
 
+	public static String getImportPathDefault() {
+		return Paths.get(System.getProperty("user.home"), "Downloads", "contacts.vcf").toString();
+	}
+
 	public static String getImportPath() {
-		String fallback;
-		switch (getMode()) {
-			case "phonerlite":
-				fallback = "%appdata%\\PhonerLite\\phonebook.csv";
-				return getSetting("SETTINGS", "impPath", fallback);
-			case "phoner":
-			default:
-				fallback = Paths.get(System.getProperty("user.home"), "Downloads", "contacts.vcf").toString();
-				return getSetting("SETTINGS", "impPath", fallback);
-		}
+		return getSetting("SETTINGS", "impPath", getImportPathDefault());
 	}
 
 	public static void setImportPath(String dlPath) {

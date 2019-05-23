@@ -41,6 +41,11 @@ public class SettingsPane {
 			File f = fc.showOpenDialog(btImportPath.getScene().getWindow());
 			if (f != null) {tfImportPath.setText(f.toString());}
 		});
+		Button btImportPathDefault = new Button("Default");
+		btImportPathDefault.setPrefWidth(buttonSize);
+		btImportPathDefault.setOnAction((event) -> {
+			tfImportPath.setText(Settings.getImportPathDefault());
+		});
 
 		Button btImport = new Button("Import");
 		btImport.setPrefWidth(buttonSize);
@@ -67,6 +72,11 @@ public class SettingsPane {
 			File f = fc.showSaveDialog(btExportPath.getScene().getWindow());
 			if (f != null) {tfExportPath.setText(f.toString());}
 		});
+		Button btExportPathDefault = new Button("Default");
+		btExportPathDefault.setPrefWidth(buttonSize);
+		btExportPathDefault.setOnAction((event) -> {
+			tfExportPath.setText(Settings.getExportPathDefault());
+		});
 
 		Button btExport = new Button("Export");
 		btExport.setPrefWidth(buttonSize);
@@ -87,8 +97,8 @@ public class SettingsPane {
 		settingsPane.setAlignment(Pos.BASELINE_RIGHT);
 		settingsPane.getColumnConstraints().addAll(cc, new ColumnConstraints(buttonSize), new ColumnConstraints(buttonSize));
 		//TODO add buttons to retrieve default paths
-		settingsPane.addRow(0, tfImportPath, btImportPath, btImport);
-		settingsPane.addRow(1, tfExportPath, btExportPath, btExport);
+		settingsPane.addRow(0, tfImportPath, btImportPath, btImportPathDefault, btImport);
+		settingsPane.addRow(1, tfExportPath, btExportPath, btExportPathDefault, btExport);
 	}
 
 	public GridPane getPane() {
