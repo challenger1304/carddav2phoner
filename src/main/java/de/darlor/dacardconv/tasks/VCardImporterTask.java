@@ -60,7 +60,9 @@ public class VCardImporterTask extends Task<Void> {
 					t.getTels().forEach((u) -> {
 						String telephone = u.getTelephone();
 						if (telephone != null) {
-							telephone = telephone.trim().replace(" ", "").replaceFirst("^0", "+49").replace(",", "").replace(";", "");
+							telephone = telephone.trim().replace(" ", "")
+								.replaceFirst("^\\+49", "").replaceFirst("^0", "").replaceFirst("^\\(0\\)", "") //cut off prefix
+								.replace(",", "").replace(";", "").replace("\"", "").replace("-", ""); //replace not allowed chars
 							this.dataSetsLocal.add(new PhonerDataSet(displayname, telephone, description));
 						}
 					});
@@ -81,4 +83,8 @@ public class VCardImporterTask extends Task<Void> {
 		this.dataSets.addAll(dataSetsLocal);
 	}
 
+	@Override
+	protected void failed() {
+		this.getException().printStackTrace();
+	}
 }
