@@ -18,12 +18,12 @@ import javafx.stage.FileChooser;
  *
  * @author Vincent Neubauer (v.neubauer@darlor.de)
  */
-public class SettingsPane {
+public class ImportExportPane {
 
 	private static GridPane settingsPane;
 	private final Integer buttonSize = 64;
 
-	public SettingsPane(DaCardConv app) {
+	public ImportExportPane(DaCardConv app) {
 
 		TextField tfImportPath = new TextField(Settings.getImportPath());
 		tfImportPath.textProperty().addListener((obs, oldText, newPath) -> {

@@ -1,6 +1,6 @@
 package de.darlor.dacardconv;
 
-import de.darlor.dacardconv.panes.SettingsPane;
+import de.darlor.dacardconv.panes.ImportExportPane;
 import de.darlor.dacardconv.panes.VCardsPane;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -23,7 +23,7 @@ public class DaCardConv extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		settingsPane = new SettingsPane(this).getPane();
+		settingsPane = new ImportExportPane(this).getPane();
 		vcardsPane = new VCardsPane();
 
 		BorderPane basicPane = new BorderPane();
