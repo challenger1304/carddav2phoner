@@ -84,8 +84,16 @@ public class Settings {
 	}
 
 	public static String getImportPath() {
-		String fallback = Paths.get(System.getProperty("user.home"), "Downloads", "contacts.vcf").toString();
-		return getSetting("SETTINGS", "impPath", fallback);
+		String fallback;
+		switch (getMode()) {
+			case "phonerlite":
+				fallback = "%appdata%\\PhonerLite\\phonebook.csv";
+				return getSetting("SETTINGS", "impPath", fallback);
+			case "phoner":
+			default:
+				fallback = Paths.get(System.getProperty("user.home"), "Downloads", "contacts.vcf").toString();
+				return getSetting("SETTINGS", "impPath", fallback);
+		}
 	}
 
 	public static void setImportPath(String dlPath) {

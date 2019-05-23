@@ -86,6 +86,7 @@ public class SettingsPane {
 		settingsPane.setHgap(4);
 		settingsPane.setAlignment(Pos.BASELINE_RIGHT);
 		settingsPane.getColumnConstraints().addAll(cc, new ColumnConstraints(buttonSize), new ColumnConstraints(buttonSize));
+		//TODO add buttons to retrieve default paths
 		settingsPane.addRow(0, tfImportPath, btImportPath, btImport);
 		settingsPane.addRow(1, tfExportPath, btExportPath, btExport);
 	}
