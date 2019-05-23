@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -36,6 +37,7 @@ public class DaCardConv extends Application {
 
 		primaryStage.setTitle("CardDAV 2 Phoner");
 		primaryStage.setScene(scene);
+		primaryStage.getIcons().add(new Image("de/darlor/dacardconv/assets/logo.png"));
 		primaryStage.show();
 	}
 
