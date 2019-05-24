@@ -1,5 +1,6 @@
 package de.darlor.dacardconv;
 
+import de.darlor.dacardconv.panes.ConnectionPane;
 import de.darlor.dacardconv.panes.ImportExportPane;
 import de.darlor.dacardconv.panes.VCardsPane;
 import java.util.logging.Logger;
@@ -21,16 +22,20 @@ public class DaCardConv extends Application {
 
 	private VCardsPane vcardsPane;
 	private GridPane settingsPane;
+	private ConnectionPane connPane;
 
 	@Override
 	public void start(Stage primaryStage) {
 		settingsPane = new ImportExportPane(this).getPane();
 		vcardsPane = new VCardsPane();
+		connPane = new ConnectionPane();
 
 		BorderPane basicPane = new BorderPane();
 		basicPane.setPadding(new Insets(8));
-		basicPane.setBottom(settingsPane);
 		BorderPane.setMargin(settingsPane, new Insets(4, 0, 0, 0));
+		BorderPane.setMargin(connPane.getPane(), new Insets(0, 4, 0, 0));
+		basicPane.setBottom(settingsPane);
+		basicPane.setLeft(connPane.getPane());
 		basicPane.setCenter(vcardsPane.getPane());
 
 		Scene scene = new Scene(basicPane, 700, 500);
