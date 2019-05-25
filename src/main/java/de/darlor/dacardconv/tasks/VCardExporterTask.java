@@ -1,5 +1,6 @@
 package de.darlor.dacardconv.tasks;
 
+import de.darlor.dacardconv.DaCardConv;
 import de.darlor.dacardconv.Settings;
 import de.darlor.dacardconv.utils.PhonerDataSet;
 import java.io.File;
@@ -8,10 +9,7 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
 
 /**
  *
@@ -23,17 +21,12 @@ public class VCardExporterTask extends Task<Void> {
 	private final Dialog DIALOG;
 
 	public VCardExporterTask(ObservableList<PhonerDataSet> vcards) {
-		this.DIALOG = new Dialog();
+		this.DIALOG = DaCardConv.getDialog("Exporter");
 		this.dataSets = vcards;
 	}
 
 	@Override
 	protected Void call() throws Exception {
-		DIALOG.getDialogPane().getButtonTypes().add(ButtonType.OK);
-		DIALOG.setTitle(Settings.getAppName() + " - Exporter");
-		Stage stage = (Stage) DIALOG.getDialogPane().getScene().getWindow();
-		stage.getIcons().add(new Image("de/darlor/dacardconv/assets/logo.png"));
-
 		File file = new File(Settings.getExportPath());
 		file.getParentFile().mkdirs();
 
