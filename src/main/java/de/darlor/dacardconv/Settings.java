@@ -12,7 +12,7 @@ import org.ini4j.Ini;
  */
 public class Settings {
 
-	private static final Path SETTINGSFOLDER = Paths.get(System.getProperty("user.home"), ".config", "darlor");
+	private static final Path SETTINGSFOLDER = Paths.get(System.getProperty("user.home"), ".config", "darlor", "daCardConv");
 	private static final File SETTINGSFILE = Paths.get(SETTINGSFOLDER.toString(), "daCardConv.conf").toFile();
 	private static String webdavPassword;
 
@@ -55,6 +55,10 @@ public class Settings {
 		return "CardDAV 2 Phoner";
 	}
 
+	public static Path getSettingsFolder() {
+		return SETTINGSFOLDER;
+	}
+	
 	public static String getMode() {
 		return getSetting("SETTINGS", "expMode", "phoner");
 	}
@@ -143,5 +147,13 @@ public class Settings {
 
 	public static void setWebdavPassword(String password) {
 		webdavPassword = password; //Do NOT store in a file!
+	}
+	
+	public static String getWebdavAddressBook() {
+		return getSetting("SETTINGS", "webdavAddr", "contacts");
+	}
+	
+	public static void setWebdavAddressBook(String addrBook) {
+		Settings.setSetting("SETTINGS", "webdavAddr", addrBook);
 	}
 }
