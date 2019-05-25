@@ -7,6 +7,8 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -48,6 +50,37 @@ public class DaCardConv extends Application {
 
 	public VCardsPane getVcardsPane() {
 		return vcardsPane;
+	}
+
+	/**
+	 * Creates an Dialog object with predefined settings.
+	 * This dialog is resizable.
+	 *
+	 * @param dialogName name of the dialog. will be of this scheme:
+	 * <pre>applicationName | dialogName</pre>
+	 * @return  a new Dialog object
+	 */
+	public static Dialog getDialog(String dialogName) {
+		return getDialog(dialogName, true);
+	}
+
+	/**
+	 * Creates an Dialog object with predefined settings.
+	 *
+	 * @param dialogName name of the dialog. will be of this scheme:
+	 * <pre>applicationName | dialogName</pre>
+	 *
+	 * @param resizable can this dialog shrink and grow in its size or not?
+	 * @return  a new Dialog object
+	 */
+	public static Dialog getDialog(String dialogName, boolean resizable) {
+		Dialog dialog = new Dialog();
+		dialog.setResizable(resizable);
+		dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+		dialog.setTitle(Settings.getAppName() + " | " + dialogName);
+		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+		stage.getIcons().add(new Image("de/darlor/dacardconv/assets/logo.png"));
+		return dialog;
 	}
 
 	/**
