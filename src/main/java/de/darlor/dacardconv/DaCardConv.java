@@ -29,8 +29,8 @@ public class DaCardConv extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		settingsPane = new ImportExportPane(this).getPane();
-		vcardsPane = new VCardsPane();
-		connPane = new ConnectionPane();
+		vcardsPane = new VCardsPane(this);
+		connPane = new ConnectionPane(this);
 
 		BorderPane basicPane = new BorderPane();
 		basicPane.setPadding(new Insets(8));

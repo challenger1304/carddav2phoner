@@ -27,18 +27,22 @@ public class CardDAVServer {
 	 * @param server URL of the Server
 	 * @param username username for login
 	 * @param password password for login
+	 * @throws MalformedURLException throws exception when host-url isn't correctly set
 	 */
-	public CardDAVServer(String server, String username, String password) {
+	public CardDAVServer(String server, String username, String password) throws MalformedURLException {
 		this.SERV = server;
 		this.USER = username;
 		this.PASS = password;
+		URL testurl = new URL(SERV); //to check for malformed urls
+		//TODO need to fix: empty url with only protocoll are accepted
+		//TODO check username and password
 	}
 
 	private void connect() {
 
 		//TODO implement this function
 	}
-
+	
 	public ObservableList<String> getAddrBooks() {
 		ObservableList<String> addrBooks = FXCollections.observableArrayList();
 		//TODO fill list with address books from remote server

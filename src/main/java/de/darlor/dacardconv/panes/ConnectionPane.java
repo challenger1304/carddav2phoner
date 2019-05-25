@@ -1,11 +1,15 @@
 package de.darlor.dacardconv.panes;
 
+import de.darlor.dacardconv.DaCardConv;
 import de.darlor.dacardconv.Settings;
+import de.darlor.dacardconv.tasks.CardDAVImporterTask;
 import de.darlor.dacardconv.utils.CardDAVServer;
+import java.net.MalformedURLException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
@@ -21,7 +25,7 @@ public class ConnectionPane {
 	private final ObservableList<String> remoteAddrBooks;
 	private CardDAVServer server;
 
-	public ConnectionPane() {
+	public ConnectionPane(DaCardConv app) {
 		remoteAddrBooks = FXCollections.observableArrayList();
 
 		TextField tfWebdavUrl = new TextField(Settings.getWebdavAddress());
@@ -40,10 +44,18 @@ public class ConnectionPane {
 
 		Button btConnect = new Button("Connect");
 
-		ComboBox cbAddrBook = new ComboBox();
-		cbAddrBook.setDisable(true);
-		cbAddrBook.setItems(remoteAddrBooks);
+		//to display available calendars, but no idea how to retrieve this data
+		//not used right now
+//		ComboBox cbAddrBook = new ComboBox();
+//		cbAddrBook.setDisable(true);
+//		cbAddrBook.setItems(remoteAddrBooks);
 
+		TextField tfAddrBook = new TextField(Settings.getWebdavAddressBook());  
+		tfAddrBook.setDisable(true);
+		tfAddrBook.textProperty().addListener((t, oldText, newText) -> {
+			Settings.setWebdavAddressBook(newText);
+		});
+		
 		Button btImport = new Button("Import");
 		btImport.setDisable(true);
 
@@ -54,24 +66,41 @@ public class ConnectionPane {
 		connPane.widthProperty().addListener((ov, oldWidth, newWidth) -> {
 			btConnect.setMinWidth((double) newWidth);
 			btImport.setMinWidth((double) newWidth);
-			cbAddrBook.setMinWidth((double) newWidth);
+//			cbAddrBook.setMinWidth((double) newWidth);
 		});
 
 		//button-event-handler
 		btConnect.setOnAction((t) -> {
-			server = new CardDAVServer(tfWebdavUrl.getText(),
-					tfWebdavUser.getText(), tfWebdavPass.getText());
-			remoteAddrBooks.clear();
-			remoteAddrBooks.addAll(server.getAddrBooks());
-			cbAddrBook.setDisable(false); //TODO only on success
-			btImport.setDisable(false); //TODO only on success
+			DaCardConv.LOGGER.info("connecting to CardDAV-Server");
+			try {
+				server = new CardDAVServer(tfWebdavUrl.getText(),
+						tfWebdavUser.getText(), tfWebdavPass.getText());
+				remoteAddrBooks.clear();
+				remoteAddrBooks.addAll(server.getAddrBooks());
+	//			cbAddrBook.setDisable(false); //TODO only on success
+				btImport.setDisable(false); //TODO only on success
+				tfAddrBook.setDisable(false); //TODO only on success
+			} catch (MalformedURLException ex) {
+				Dialog dialog = DaCardConv.getDialog("Remote Connection");
+				dialog.setContentText(ex.getMessage());
+				dialog.show();
+				ex.printStackTrace();
+			}
 		});
 		btImport.setOnAction((t) -> {
-			//TODO import address book from CardDAV-Server
+			DaCardConv.LOGGER.info("downloading address book from remote server");
+			CardDAVImporterTask task = new CardDAVImporterTask(this.server, 
+					tfAddrBook.getText(), app.getVcardsPane().getDataTableList());
+			Thread th = new Thread(task);
+			th.start();
 		});
 
-		connPane.getChildren().addAll(tfWebdavUrl, tfWebdavUser, tfWebdavPass,
-				btConnect, new Separator(), cbAddrBook, btImport);
+		connPane.getChildren().addAll(
+				new Label("CardDAV Server URL:"), tfWebdavUrl,
+				new Label("Username:"), tfWebdavUser,
+				new Label("Password:"), tfWebdavPass,
+				btConnect, new Separator(),
+				new Label("Address Book Name:"), tfAddrBook, btImport);
 	}
 
 	public VBox getPane() {

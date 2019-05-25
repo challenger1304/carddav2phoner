@@ -1,5 +1,6 @@
 package de.darlor.dacardconv.panes;
 
+import de.darlor.dacardconv.DaCardConv;
 import de.darlor.dacardconv.utils.PhonerDataSet;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,7 +18,7 @@ public class VCardsPane {
 	private final TableView<PhonerDataSet> dataTable;
 	private final ObservableList<PhonerDataSet> dataTableList;
 
-	public VCardsPane() {
+	public VCardsPane(DaCardConv app) {
 		dataTableList = FXCollections.observableArrayList();
 		dataTable = new TableView<>(dataTableList);
 		dataTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
