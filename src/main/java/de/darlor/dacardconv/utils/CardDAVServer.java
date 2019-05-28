@@ -78,7 +78,7 @@ public class CardDAVServer {
 	 * @throws WebDAVUnauthorizedException when login credentials aren't
 	 * correct.
 	 */
-	protected boolean checkAuth() throws WebDAVUnauthorizedException {
+	protected void checkAuth() throws WebDAVUnauthorizedException {
 		//TODO implement this function
 		throw new WebDAVUnauthorizedException("This is currently not supported.");
 	}
