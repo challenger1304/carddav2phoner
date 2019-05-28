@@ -26,6 +26,8 @@ public class CardDAVImporterTask extends Task<Void> {
 	@Override
 	protected Void call() throws Exception {
 		VCardImporterTask task = new VCardImporterTask(SERV.downloadAddressBook(ADDRBOOK), LIST);
+		Thread th = new Thread(task);
+		th.start();
 		return null;
 	}
 

@@ -27,6 +27,7 @@ public class CardDAVServer {
 	private final String SERV;
 	private final String USER;
 	private final String PASS;
+	private final String AUTH;
 	private String cardDAVBaseURL;
 
 	/**
@@ -42,6 +43,7 @@ public class CardDAVServer {
 		this.SERV = server;
 		this.USER = username;
 		this.PASS = password;
+		this.AUTH = Base64.getEncoder().encodeToString((USER + ":" + PASS).getBytes()); //base64 of username:password;
 		this.connect();
 	}
 
@@ -66,8 +68,8 @@ public class CardDAVServer {
 	 * Checks if there is a reachable CardDAV-Server behind the given URL.
 	 *
 	 * @throws WebDAVMalformedURLException when Server isn't available.
-	 * @throws WebDAVResponseBlockedException when Server responds with something
-	 * other than 200.
+	 * @throws WebDAVResponseBlockedException when Server responds with
+	 * something other than 200.
 	 */
 	protected void checkUrl() throws WebDAVException {
 		try {
@@ -95,8 +97,7 @@ public class CardDAVServer {
 			URL baseUrl = new URL(String.format("%s/.well-known/carddav", SERV.replace("/$", "")));
 			HttpsURLConnection con = (HttpsURLConnection) baseUrl.openConnection();
 			con.setRequestMethod("GET");
-			con.setRequestProperty("Authorization", "Basic "
-					+ Base64.getEncoder().encodeToString((USER + ":" + PASS).getBytes())); //base64 of username:password
+			con.setRequestProperty("Authorization", "Basic " + AUTH);
 			Integer status = con.getResponseCode();
 			switch (status) {
 				case 401:
@@ -112,7 +113,12 @@ public class CardDAVServer {
 		}
 	}
 
-	private void setWellKnownCardDAVPath() throws WebDAVException {
+	/**
+	 * Remembers the redirected path for address books.
+	 *
+	 * @throws WebDAVMalformedURLException when it can't specify the new path
+	 */
+	private void setWellKnownCardDAVPath() throws WebDAVMalformedURLException {
 		try {
 			URL baseUrl = new URL(String.format("%s/.well-known/carddav", SERV.replace("/$", "")));
 			HttpsURLConnection con = (HttpsURLConnection) baseUrl.openConnection();
@@ -130,7 +136,7 @@ public class CardDAVServer {
 			throw new WebDAVMalformedURLException("Server isn't reachable", e);
 		}
 	}
-	
+
 	public String getWellKnownCardDAVPath() {
 		return this.cardDAVBaseURL;
 	}
@@ -153,7 +159,7 @@ public class CardDAVServer {
 	 * MalformedURLException
 	 */
 	private URL getAddressBookUrl(String addrBook) throws MalformedURLException {
-		return new URL(SERV + "/remote.php/dav/addressbooks/users/" + USER + "/" + addrBook + "/?export");
+		return new URL(String.format("%s/addressbooks/users/%s/%s/?export", cardDAVBaseURL, USER, addrBook));
 	}
 
 	/**
@@ -164,7 +170,10 @@ public class CardDAVServer {
 	public File downloadAddressBook(String addrBook) throws IOException {
 		File dlFile = new File(Settings.getSettingsFolder().toFile(), "contacts.vcf");
 		URL dlUrl = this.getAddressBookUrl(addrBook);
-		ReadableByteChannel rbc = Channels.newChannel(dlUrl.openStream());
+		HttpsURLConnection con = (HttpsURLConnection) dlUrl.openConnection();
+		con.setRequestMethod("GET");
+		con.setRequestProperty("Authorization", "Basic " + AUTH);
+		ReadableByteChannel rbc = Channels.newChannel(con.getInputStream());
 		FileOutputStream fos = new FileOutputStream(dlFile);
 		fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 		return dlFile;
