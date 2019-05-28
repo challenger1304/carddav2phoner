@@ -3,6 +3,7 @@ package de.darlor.dacardconv.utils;
 import de.darlor.dacardconv.Settings;
 import de.darlor.dacardconv.exceptions.WebDAVException;
 import de.darlor.dacardconv.exceptions.WebDAVMalformedURLException;
+import de.darlor.dacardconv.exceptions.WebDAVResponseBlockedException;
 import de.darlor.dacardconv.exceptions.WebDAVUnauthorizedException;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,8 +12,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.Base64;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * A Class to do some basic tasks with the CardDAV-Server.
@@ -46,14 +49,14 @@ public class CardDAVServer {
 	 * Initial connection to the Server. This will retrieve all necessary data
 	 * like path for the address books and checks for authorization.
 	 *
-	 * @throws WebDAVException When the connection to the CardDAV Server fails. This
-	 * can be due to wrong login credentials or an unavailable service.
+	 * @throws WebDAVException When the connection to the CardDAV Server fails.
+	 * This can be due to wrong login credentials or an unavailable service.
 	 */
 	protected void connect() throws WebDAVException {
 		try {
 			this.checkUrl();
 			this.checkAuth();
-			this.cardDAVBaseURL = this.getWellKnownCarddavPath();
+			this.setWellKnownCardDAVPath();
 		} catch (WebDAVException e) {
 			throw new WebDAVException("Initial connection to CardDAV-Server failed.", e);
 		}
@@ -63,10 +66,21 @@ public class CardDAVServer {
 	 * Checks if there is a reachable CardDAV-Server behind the given URL.
 	 *
 	 * @throws WebDAVMalformedURLException when Server isn't available.
+	 * @throws WebDAVResponseBlockedException when Server responds with something
+	 * other than 200.
 	 */
-	protected void checkUrl() throws WebDAVMalformedURLException {
-		//TODO implement this
-		throw new WebDAVMalformedURLException("Host isn't reachable");
+	protected void checkUrl() throws WebDAVException {
+		try {
+			URL baseUrl = new URL(SERV);
+			HttpsURLConnection con = (HttpsURLConnection) baseUrl.openConnection();
+			con.setRequestMethod("GET");
+			Integer status = con.getResponseCode();
+			if (200 != status) {
+				throw new WebDAVResponseBlockedException("Connection refused", status);
+			}
+		} catch (IOException e) {
+			throw new WebDAVMalformedURLException("Server isn't reachable", e);
+		}
 	}
 
 	/**
@@ -76,14 +90,49 @@ public class CardDAVServer {
 	 * @throws WebDAVUnauthorizedException when login credentials aren't
 	 * correct.
 	 */
-	protected void checkAuth() throws WebDAVUnauthorizedException {
-		//TODO implement this function
-		throw new WebDAVUnauthorizedException("This is currently not supported.");
+	protected void checkAuth() throws WebDAVException {
+		try {
+			URL baseUrl = new URL(String.format("%s/.well-known/carddav", SERV.replace("/$", "")));
+			HttpsURLConnection con = (HttpsURLConnection) baseUrl.openConnection();
+			con.setRequestMethod("GET");
+			con.setRequestProperty("Authorization", "Basic "
+					+ Base64.getEncoder().encodeToString((USER + ":" + PASS).getBytes())); //base64 of username:password
+			Integer status = con.getResponseCode();
+			switch (status) {
+				case 401:
+					throw new WebDAVUnauthorizedException("Wrong credentials");
+				case 200:
+					//ignore on success
+					break;
+				default:
+					throw new WebDAVResponseBlockedException("Connection refused", status);
+			}
+		} catch (IOException e) {
+			throw new WebDAVMalformedURLException("Server isn't reachable", e);
+		}
 	}
 
-	private String getWellKnownCarddavPath() {
-		//TODO implement this function
-		throw new UnsupportedOperationException("This is currently not supported.");
+	private void setWellKnownCardDAVPath() throws WebDAVException {
+		try {
+			URL baseUrl = new URL(String.format("%s/.well-known/carddav", SERV.replace("/$", "")));
+			HttpsURLConnection con = (HttpsURLConnection) baseUrl.openConnection();
+			con.setInstanceFollowRedirects(false);
+			con.setRequestMethod("GET");
+			con.setRequestProperty("Authorization", "Basic "
+					+ Base64.getEncoder().encodeToString((USER + ":" + PASS).getBytes())); //base64 of username:password
+			String location = con.getHeaderField("Location");
+			if (location == null) {
+				throw new WebDAVMalformedURLException("Couldn't retrieve the base URL for address books");
+			} else {
+				this.cardDAVBaseURL = location;
+			}
+		} catch (IOException e) {
+			throw new WebDAVMalformedURLException("Server isn't reachable", e);
+		}
+	}
+	
+	public String getWellKnownCardDAVPath() {
+		return this.cardDAVBaseURL;
 	}
 
 	/**
