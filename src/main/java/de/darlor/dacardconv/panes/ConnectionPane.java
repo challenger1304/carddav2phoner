@@ -2,9 +2,9 @@ package de.darlor.dacardconv.panes;
 
 import de.darlor.dacardconv.DaCardConv;
 import de.darlor.dacardconv.Settings;
+import de.darlor.dacardconv.exceptions.WebDAVException;
 import de.darlor.dacardconv.tasks.CardDAVImporterTask;
 import de.darlor.dacardconv.utils.CardDAVServer;
-import java.net.MalformedURLException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
@@ -77,14 +77,15 @@ public class ConnectionPane {
 						tfWebdavUser.getText(), tfWebdavPass.getText());
 				remoteAddrBooks.clear();
 				remoteAddrBooks.addAll(server.getAddrBooks());
-	//			cbAddrBook.setDisable(false); //TODO only on success
+//				cbAddrBook.setDisable(false); //TODO only on success
 				btImport.setDisable(false); //TODO only on success
 				tfAddrBook.setDisable(false); //TODO only on success
-			} catch (MalformedURLException ex) {
+			} catch (WebDAVException ex) {
+				String errMsg = String.format("%s\r\nReason: %s", ex.getMessage(), ex.getCause().getMessage());
 				Dialog dialog = DaCardConv.getDialog("Remote Connection");
-				dialog.setContentText(ex.getMessage());
+				dialog.setContentText(errMsg);
 				dialog.show();
-				ex.printStackTrace();
+				DaCardConv.LOGGER.severe(errMsg);
 			}
 		});
 		btImport.setOnAction((t) -> {

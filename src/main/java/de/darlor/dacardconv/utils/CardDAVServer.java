@@ -32,26 +32,24 @@ public class CardDAVServer {
 	 * @param server URL of the Server
 	 * @param username username for login
 	 * @param password password for login
-	 * @throws MalformedURLException throws exception when host-URL isn't
-	 * correctly set
+	 * @throws WebDAVException throws exception when service isn't available or
+	 * credentials are wrong. correctly set
 	 */
-	public CardDAVServer(String server, String username, String password) throws MalformedURLException {
+	public CardDAVServer(String server, String username, String password) throws WebDAVException {
 		this.SERV = server;
 		this.USER = username;
 		this.PASS = password;
-		URL testurl = new URL(SERV); //to check for malformed urls
-		//TODO need to fix: empty url with only protocoll are accepted
-		//TODO check username and password
+		this.connect();
 	}
 
 	/**
 	 * Initial connection to the Server. This will retrieve all necessary data
 	 * like path for the address books and checks for authorization.
 	 *
-	 * @throws Exception When the connection to the CardDAV Server fails. This
+	 * @throws WebDAVException When the connection to the CardDAV Server fails. This
 	 * can be due to wrong login credentials or an unavailable service.
 	 */
-	private void connect() throws WebDAVException {
+	protected void connect() throws WebDAVException {
 		try {
 			this.checkUrl();
 			this.checkAuth();
