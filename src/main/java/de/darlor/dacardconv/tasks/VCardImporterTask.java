@@ -1,7 +1,7 @@
 package de.darlor.dacardconv.tasks;
 
 import de.darlor.dacardconv.DaCardConv;
-import de.darlor.dacardconv.Settings;
+import de.darlor.dacardconv.settings.BaseSettings;
 import de.darlor.dacardconv.utils.PhonerDataSet;
 import de.darlor.dacardconv.utils.PhonerUnknownCallerDataSet;
 import java.io.File;
@@ -49,7 +49,7 @@ public class VCardImporterTask extends Task<Void> {
 				} else if (t.getFN() != null) {
 					name = t.getFN().getFormattedName();
 				} else {
-					name = Settings.getAnonymousName();
+					name = BaseSettings.getAnonymousName();
 				}
 				String displayname = name.replace(",", "").replace(";", "");
 				//get a description (generated from groups)

@@ -1,6 +1,6 @@
 package de.darlor.dacardconv.utils;
 
-import de.darlor.dacardconv.Settings;
+import de.darlor.dacardconv.settings.BaseSettings;
 import de.darlor.dacardconv.exceptions.WebDAVException;
 import de.darlor.dacardconv.exceptions.WebDAVMalformedURLException;
 import de.darlor.dacardconv.exceptions.WebDAVResponseBlockedException;
@@ -171,7 +171,7 @@ public class CardDAVServer {
 	 * @throws IOException when failed
 	 */
 	public File downloadAddressBook(String addrBook) throws IOException {
-		File dlFile = new File(Settings.getSettingsFolder().toFile(), "contacts.vcf");
+		File dlFile = new File(BaseSettings.getSettingsFolder().toFile(), "contacts.vcf");
 		URL dlUrl = this.getAddressBookUrl(addrBook);
 		HttpsURLConnection con = (HttpsURLConnection) dlUrl.openConnection();
 		con.setRequestMethod("GET");

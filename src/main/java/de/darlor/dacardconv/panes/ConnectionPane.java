@@ -1,8 +1,8 @@
 package de.darlor.dacardconv.panes;
 
 import de.darlor.dacardconv.DaCardConv;
-import de.darlor.dacardconv.Settings;
 import de.darlor.dacardconv.exceptions.WebDAVException;
+import de.darlor.dacardconv.settings.WebDAVSettings;
 import de.darlor.dacardconv.tasks.CardDAVImporterTask;
 import de.darlor.dacardconv.utils.CardDAVServer;
 import javafx.collections.FXCollections;
@@ -28,19 +28,19 @@ public class ConnectionPane {
 	public ConnectionPane(DaCardConv app) {
 		remoteAddrBooks = FXCollections.observableArrayList();
 
-		TextField tfWebdavUrl = new TextField(Settings.getWebdavAddress());
+		TextField tfWebdavUrl = new TextField(WebDAVSettings.getURL());
 		tfWebdavUrl.textProperty().addListener((obs, oldText, newUrl) -> {
-			Settings.setWebdavAddress(newUrl);
+			WebDAVSettings.setURL(newUrl);
 		});
-		TextField tfWebdavUser = new TextField(Settings.getWebdavUsername());
+		TextField tfWebdavUser = new TextField(WebDAVSettings.getUsername());
 		tfWebdavUser.textProperty().addListener((obs, oldText, newUsername) -> {
-			Settings.setWebdavUsername(newUsername);
+			WebDAVSettings.setUsername(newUsername);
 		});
 		PasswordField tfWebdavPass = new PasswordField();
 		tfWebdavPass.textProperty().addListener((obs, oldText, newPassword) -> {
-			Settings.setWebdavPassword(newPassword);
+			WebDAVSettings.setPassword(newPassword);
 		});
-		tfWebdavPass.setText(Settings.getwebdavPassword());
+		tfWebdavPass.setText(WebDAVSettings.getPassword());
 
 		Button btConnect = new Button("Connect");
 
@@ -50,12 +50,12 @@ public class ConnectionPane {
 //		cbAddrBook.setDisable(true);
 //		cbAddrBook.setItems(remoteAddrBooks);
 
-		TextField tfAddrBook = new TextField(Settings.getWebdavAddressBook());  
+		TextField tfAddrBook = new TextField(WebDAVSettings.getAddressBook());
 		tfAddrBook.setDisable(true);
 		tfAddrBook.textProperty().addListener((t, oldText, newText) -> {
-			Settings.setWebdavAddressBook(newText);
+			WebDAVSettings.setAddressBook(newText);
 		});
-		
+
 		Button btImport = new Button("Import");
 		btImport.setDisable(true);
 
@@ -90,7 +90,7 @@ public class ConnectionPane {
 		});
 		btImport.setOnAction((t) -> {
 			DaCardConv.LOGGER.info("downloading address book from remote server");
-			CardDAVImporterTask task = new CardDAVImporterTask(this.server, 
+			CardDAVImporterTask task = new CardDAVImporterTask(this.server,
 					tfAddrBook.getText(), app.getVcardsPane().getDataTableList());
 			Thread th = new Thread(task);
 			th.start();

@@ -1,7 +1,7 @@
 package de.darlor.dacardconv.tasks;
 
 import de.darlor.dacardconv.DaCardConv;
-import de.darlor.dacardconv.Settings;
+import de.darlor.dacardconv.settings.ImportExportSettings;
 import de.darlor.dacardconv.utils.PhonerDataSet;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,12 +27,12 @@ public class VCardExporterTask extends Task<Void> {
 
 	@Override
 	protected Void call() throws Exception {
-		File file = new File(Settings.getExportPath());
+		File file = new File(ImportExportSettings.getExportPath());
 		file.getParentFile().mkdirs();
 
 		try (PrintWriter writer = new PrintWriter(file, StandardCharsets.ISO_8859_1)) { //Charset needed by phoner
 			dataSets.forEach((t) -> {
-				writer.println(String.format(Settings.getExportPattern(), t.getName(), t.getTelNo(), t.getDesc()));
+				writer.println(String.format(ImportExportSettings.getExportPattern(), t.getName(), t.getTelNo(), t.getDesc()));
 			});
 		} catch (FileNotFoundException ex) {
 			ex.printStackTrace();

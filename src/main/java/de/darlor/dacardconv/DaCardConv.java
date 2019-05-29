@@ -1,5 +1,6 @@
 package de.darlor.dacardconv;
 
+import de.darlor.dacardconv.settings.BaseSettings;
 import de.darlor.dacardconv.panes.ConnectionPane;
 import de.darlor.dacardconv.panes.ImportExportPane;
 import de.darlor.dacardconv.panes.VCardsPane;
@@ -42,7 +43,7 @@ public class DaCardConv extends Application {
 
 		Scene scene = new Scene(basicPane, 700, 500);
 
-		primaryStage.setTitle(Settings.getAppName());
+		primaryStage.setTitle(BaseSettings.getAppName());
 		primaryStage.setScene(scene);
 		primaryStage.getIcons().add(new Image("de/darlor/dacardconv/assets/logo.png"));
 		primaryStage.show();
@@ -77,7 +78,7 @@ public class DaCardConv extends Application {
 		Dialog dialog = new Dialog();
 		dialog.setResizable(resizable);
 		dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-		dialog.setTitle(Settings.getAppName() + " | " + dialogName);
+		dialog.setTitle(BaseSettings.getAppName() + " | " + dialogName);
 		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
 		stage.getIcons().add(new Image("de/darlor/dacardconv/assets/logo.png"));
 		return dialog;

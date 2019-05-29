@@ -5,7 +5,7 @@
  */
 package de.darlor.dacardconv.utils;
 
-import de.darlor.dacardconv.Settings;
+import de.darlor.dacardconv.settings.BaseSettings;
 
 /**
  *
@@ -14,9 +14,9 @@ import de.darlor.dacardconv.Settings;
 public class PhonerUnknownCallerDataSet extends PhonerDataSet {
 
 	public PhonerUnknownCallerDataSet() {
-		super(Settings.getAnonymousName(), "0", "");
+		super(BaseSettings.getAnonymousName(), "0", "");
 		nameProperty().addListener((observable, oldValue, newValue) -> {
-			Settings.setAnonymousName(newValue);
+			BaseSettings.setAnonymousName(newValue);
 		});
 	}
 

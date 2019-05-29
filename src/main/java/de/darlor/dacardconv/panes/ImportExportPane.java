@@ -1,7 +1,7 @@
 package de.darlor.dacardconv.panes;
 
 import de.darlor.dacardconv.DaCardConv;
-import de.darlor.dacardconv.Settings;
+import de.darlor.dacardconv.settings.ImportExportSettings;
 import de.darlor.dacardconv.tasks.VCardExporterTask;
 import de.darlor.dacardconv.tasks.VCardImporterTask;
 import java.io.File;
@@ -25,15 +25,15 @@ public class ImportExportPane {
 
 	public ImportExportPane(DaCardConv app) {
 
-		TextField tfImportPath = new TextField(Settings.getImportPath());
+		TextField tfImportPath = new TextField(ImportExportSettings.getImportPath());
 		tfImportPath.textProperty().addListener((obs, oldText, newPath) -> {
-			Settings.setImportPath(newPath);
+			ImportExportSettings.setImportPath(newPath);
 		});
 		Button btImportPath = new Button("Select");
 		btImportPath.setPrefWidth(buttonSize);
 		btImportPath.setOnAction((event) -> {
 			FileChooser fc = new FileChooser();
-			File file = new File(Settings.getExportPath());
+			File file = new File(ImportExportSettings.getExportPath());
 			if (file.getParentFile().isDirectory()) { //check if directory exists
 				fc.setInitialDirectory(file.getParentFile());
 				fc.setInitialFileName(file.getName());
@@ -44,7 +44,7 @@ public class ImportExportPane {
 		Button btImportPathDefault = new Button("Default");
 		btImportPathDefault.setPrefWidth(buttonSize);
 		btImportPathDefault.setOnAction((event) -> {
-			tfImportPath.setText(Settings.getImportPathDefault());
+			tfImportPath.setText(ImportExportSettings.getImportPathDefault());
 		});
 
 		Button btImport = new Button("Import");
@@ -56,15 +56,15 @@ public class ImportExportPane {
 			th.start();
 		});
 
-		TextField tfExportPath = new TextField(Settings.getExportPath());
+		TextField tfExportPath = new TextField(ImportExportSettings.getExportPath());
 		tfExportPath.textProperty().addListener((obs, oldText, newPath) -> {
-			Settings.setExportPath(newPath);
+			ImportExportSettings.setExportPath(newPath);
 		});
 		Button btExportPath = new Button("Select");
 		btExportPath.setPrefWidth(buttonSize);
 		btExportPath.setOnAction((event) -> {
 			FileChooser fc = new FileChooser();
-			File file = new File(Settings.getExportPath());
+			File file = new File(ImportExportSettings.getExportPath());
 			if (file.getParentFile().isDirectory()) { //check if directory exists
 				fc.setInitialDirectory(file.getParentFile());
 				fc.setInitialFileName(file.getName());
@@ -75,7 +75,7 @@ public class ImportExportPane {
 		Button btExportPathDefault = new Button("Default");
 		btExportPathDefault.setPrefWidth(buttonSize);
 		btExportPathDefault.setOnAction((event) -> {
-			tfExportPath.setText(Settings.getExportPathDefault());
+			tfExportPath.setText(ImportExportSettings.getExportPathDefault());
 		});
 
 		Button btExport = new Button("Export");
