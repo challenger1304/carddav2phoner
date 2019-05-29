@@ -2,6 +2,7 @@ package de.darlor.dacardconv.tasks;
 
 import de.darlor.dacardconv.DaCardConv;
 import de.darlor.dacardconv.settings.BaseSettings;
+import de.darlor.dacardconv.settings.ImportExportSettings;
 import de.darlor.dacardconv.utils.PhonerDataSet;
 import de.darlor.dacardconv.utils.PhonerUnknownCallerDataSet;
 import java.io.File;
@@ -61,8 +62,12 @@ public class VCardImporterTask extends Task<Void> {
 						String telephone = u.getTelephone();
 						if (telephone != null) {
 							telephone = telephone.trim().replace(" ", "")
-								.replaceFirst("^\\+49", "").replaceFirst("^0", "").replaceFirst("^\\(0\\)", "") //cut off prefix
-								.replace(",", "").replace(";", "").replace("\"", "").replace("-", ""); //replace not allowed chars
+									.replace(",", "").replace(";", "").replace("\"", "").replace("-", ""); //replace not allowed chars
+							telephone = ImportExportSettings.getAppendAreaCode()
+									? telephone.replaceFirst("^\\" + ImportExportSettings.getCountryPrefix(), "0")
+									: telephone.replaceFirst("^\\" + ImportExportSettings.getCountryPrefix(), "");
+							telephone = ImportExportSettings.getAppendAreaCode()
+									? telephone : telephone.replaceFirst("^0", ""); //cut off prefix
 							this.dataSetsLocal.add(new PhonerDataSet(displayname, telephone, description));
 						}
 					});
