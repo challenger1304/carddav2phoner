@@ -30,20 +30,21 @@ public class DaCardConv extends Application {
 	public static final Logger LOGGER = Logger.getAnonymousLogger();
 
 	private VCardsPane vcardsPane;
-	private GridPane settingsPane;
+	private GridPane imExPane;
 	private ConnectionPane connPane;
 	private VBox asidePane;
 
 	@Override
 	public void start(Stage primaryStage) {
-		settingsPane = new ImportExportPane(this).getPane();
+		imExPane = new ImportExportPane(this).getPane();
 		vcardsPane = new VCardsPane(this);
 		connPane = new ConnectionPane(this);
 		asidePane = new VBox();
 		asidePane.setSpacing(4);
 		Button btSettings = new Button("Settings");
 		btSettings.setOnAction((event) -> {
-			Scene settingsScene = new Scene(SettingsPane.getPane(), 480, 360);
+			GridPane settingsPane = new SettingsPane().getPane();
+			Scene settingsScene = new Scene(settingsPane, settingsPane.getPrefWidth(), settingsPane.getPrefHeight());
 			Stage settingsStage = new Stage();
 			settingsStage.setTitle(BaseSettings.getAppName() + " | Settings");
 			settingsStage.setScene(settingsScene);
@@ -51,21 +52,20 @@ public class DaCardConv extends Application {
 			settingsStage.initOwner(primaryStage);
 			settingsStage.initModality(Modality.APPLICATION_MODAL);
 			settingsStage.showAndWait();
-//			settingsStage.setScene(value);
 		});
 		Region spacer01 = new Region();
 		spacer01.setPrefHeight(40);
 		VBox.setVgrow(spacer01, Priority.ALWAYS);
-		asidePane.getChildren().addAll(connPane.getPane(), spacer01); //TODO add btSettings
+		asidePane.getChildren().addAll(connPane.getPane(), spacer01, btSettings); //TODO add btSettings
 		asidePane.widthProperty().addListener((ov, oldWidth, newWidth) -> {
 			btSettings.setMinWidth((double) newWidth);
 		});
 
 		BorderPane basicPane = new BorderPane();
 		basicPane.setPadding(new Insets(8));
-		BorderPane.setMargin(settingsPane, new Insets(4, 0, 0, 0));
+		BorderPane.setMargin(imExPane, new Insets(4, 0, 0, 0));
 		BorderPane.setMargin(asidePane, new Insets(0, 4, 0, 0));
-		basicPane.setBottom(settingsPane);
+		basicPane.setBottom(imExPane);
 		basicPane.setLeft(asidePane);
 		basicPane.setCenter(vcardsPane.getPane());
 

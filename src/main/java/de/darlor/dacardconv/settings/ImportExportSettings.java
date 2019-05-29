@@ -89,4 +89,12 @@ public class ImportExportSettings extends BaseSettings {
 		setImExSetting("appendCountryCode", value.toString());
 	}
 
+	public static String getCountryPrefix() {
+		return getImExSetting("countryPrefix", "+49");
+	}
+
+	public static void setCountryPrefix(String prefix) {
+		setImExSetting("countryPrefix", prefix);
+	}
+
 }
