@@ -1,5 +1,6 @@
 package de.darlor.dacardconv.settings;
 
+import de.darlor.dacardconv.exceptions.MalformedPatternException;
 import java.nio.file.Paths;
 
 /**
@@ -17,9 +18,12 @@ public class ImportExportSettings extends BaseSettings {
 	}
 
 	public static String getExportPathDefault() {
-		return Paths.get(System.getProperty("user.home"), "Downloads", "contacts.txt").toString();
-		//TODO return the following when for PhonerLite
-//		return Paths.get(System.getProperty("user.home"), "AppData", "Roaming", "PhonerLite", "phonebook.csv").toString();
+		String fallback = Paths.get(System.getProperty("user.home"), "Downloads", "contacts.txt").toString();
+		return getImExSetting("exportPathDefault", fallback);
+	}
+
+	public static void setExportPathDefault(String value) {
+		setImExSetting("exportPathDefault", value);
 	}
 
 	public static String getExportPath() {
@@ -41,10 +45,15 @@ public class ImportExportSettings extends BaseSettings {
 	 * @param pattern the new pattern. common pattern are:
 	 * <br><code>"%s;%s;%s"</code> for Phoner, or <br><code>"%s;%s;;%s"</code>
 	 * for PhonerLite.
+	 * @throws MalformedPatternException thrown when the cahrsequence
+	 * "<b>%s</b>" isn't found exactly three times.
 	 */
-	public static void setExportPattern(String pattern) {
-		//TODO check pattern. must contain exactly three times "%s"
-		setImExSetting("pattern", pattern);
+	public static void setExportPattern(String pattern) throws MalformedPatternException {
+		if (6 == (pattern.length() - pattern.replaceAll("%s", "").length())) { //true if %s is three times in the pattern
+			setImExSetting("pattern", pattern);
+		} else {
+			throw new MalformedPatternException("must contain \"%s\" exactly three times.");
+		}
 	}
 
 	public static String getImportPathDefault() {
@@ -53,6 +62,7 @@ public class ImportExportSettings extends BaseSettings {
 
 	/**
 	 * Saved path to the vcf file, to import all vcards.
+	 *
 	 * @return String that represents the file location.
 	 */
 	public static String getImportPath() {
@@ -62,4 +72,21 @@ public class ImportExportSettings extends BaseSettings {
 	public static void setImportPath(String dlPath) {
 		setImExSetting("impPath", dlPath);
 	}
+
+	public static Boolean getAppendAreaCode() {
+		return Boolean.valueOf(getImExSetting("appendAreaCode", "false"));
+	}
+
+	public static void setAppendAreaCode(Boolean value) {
+		setImExSetting("appendAreaCode", value.toString());
+	}
+
+	public static Boolean getAppendCountryCode() {
+		return Boolean.valueOf(getImExSetting("appendCountryCode", "false"));
+	}
+
+	public static void setAppendCountryCode(Boolean value) {
+		setImExSetting("appendCountryCode", value.toString());
+	}
+
 }
