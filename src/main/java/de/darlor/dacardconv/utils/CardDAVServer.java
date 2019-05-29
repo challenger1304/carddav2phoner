@@ -16,6 +16,7 @@ import java.util.Base64;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLException;
 
 /**
  * A Class to do some basic tasks with the CardDAV-Server.
@@ -55,6 +56,7 @@ public class CardDAVServer {
 	 * This can be due to wrong login credentials or an unavailable service.
 	 */
 	protected void connect() throws WebDAVException {
+
 		try {
 			this.checkUrl();
 			this.checkAuth();
@@ -80,6 +82,8 @@ public class CardDAVServer {
 			if (200 != status) {
 				throw new WebDAVResponseBlockedException("Connection refused", status);
 			}
+		} catch (SSLException e) {
+			throw new WebDAVMalformedURLException("SSL-Certificate of the server isn't trusted", e);
 		} catch (IOException e) {
 			throw new WebDAVMalformedURLException("Server isn't reachable", e);
 		}
@@ -124,8 +128,7 @@ public class CardDAVServer {
 			HttpsURLConnection con = (HttpsURLConnection) baseUrl.openConnection();
 			con.setInstanceFollowRedirects(false);
 			con.setRequestMethod("GET");
-			con.setRequestProperty("Authorization", "Basic "
-					+ Base64.getEncoder().encodeToString((USER + ":" + PASS).getBytes())); //base64 of username:password
+			con.setRequestProperty("Authorization", "Basic " + AUTH);
 			String location = con.getHeaderField("Location");
 			if (location == null) {
 				throw new WebDAVMalformedURLException("Couldn't retrieve the base URL for address books");
