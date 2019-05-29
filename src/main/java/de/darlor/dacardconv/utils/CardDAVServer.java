@@ -133,7 +133,7 @@ public class CardDAVServer {
 			if (location == null) {
 				throw new WebDAVMalformedURLException("Couldn't retrieve the base URL for address books");
 			} else {
-				this.cardDAVBaseURL = location;
+				this.cardDAVBaseURL = location.replaceAll("/$", "");
 			}
 		} catch (IOException e) {
 			throw new WebDAVMalformedURLException("Server isn't reachable", e);
